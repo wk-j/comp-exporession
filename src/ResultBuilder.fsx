@@ -1,3 +1,5 @@
+open System
+
 type Result<'a> =
     | Success of 'a
     | Failure of string
@@ -16,11 +18,13 @@ type ResultBuilder() =
 
 let res = ResultBuilder()
 
-let Combine2 p1 p2 fn = fun a -> res {
-  let! x = p1 a
-  let! y = p2 a
-  try
-    return fn(x,y)
-  with ex ->
-    return! Failure(ex.Message) }
+let combine2 p1 p2 fn =
+    fun a -> res {
+      let! x = p1 a
+      let! y = p2 a
+      try
+        return fn(x,y)
+      with ex ->
+        return! Failure(ex.Message)
+    }
 
