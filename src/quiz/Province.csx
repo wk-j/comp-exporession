@@ -1,26 +1,30 @@
-
-class C
-{
-    public string Provice { set; get; }
-    public string District { set; get; }
-    public string Amphoe { set; get; }
-}
-
-var datas = new List<C> {
-    new C { Provice = "A", District = "B", Amphoe = "C" },
-    new C { Provice = "B", District = "B", Amphoe = "C" },
-    new C { Provice = "D", District = "B", Amphoe = "D" },
-    new C { Provice = "C", District = "B", Amphoe = "C" },
+var data = new List<dynamic> {
+    new { Province = "a", District = "c", SubDistrict = "b" },
+    new { Province = "a", District = "g", SubDistrict = "k" },
+    new { Province = "b", District = "g", SubDistrict = "k" },
 };
 
-var rs =
-    datas.GroupBy(c => c.Provice,
-        (province, provinceGroup) => provinceGroup.GroupBy(x => x.District,
-            (district, districtGroup) => (province, district, districtGroup.Select(vvv => (vvv.Amphoe)))));
-
-foreach (var item in rs)
+var finalData = data.GroupBy(x => x.Province).Select(x =>
 {
-    Console.WriteLine($"{item}");
-}
+    var district = x.GroupBy(y => y.District).Select(y =>
+    {
+        return new { y.Key, Value = data.Where(z => z.District == y.Key).Select(z => z.SubDistrict).ToList(), };
+    }).ToList();
+    return new { x.Key, Value = district, };
+}).ToList();
 
+
+foreach (var i1 in finalData)
+{
+    Console.Write($"Provice = {i1.Key}, ");
+    foreach (var i2 in i1.Value)
+    {
+        Console.Write($"District = {i2.Key}, Sub =");
+        foreach (var i3 in i2.Value)
+        {
+            Console.Write($"{i3}, ");
+        }
+    }
+    Console.WriteLine();
+}
 

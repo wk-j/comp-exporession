@@ -18,3 +18,18 @@ let data = [
     { Province = "C";  Amphoe = "E"; District = "E" }
     { Province = "C";  Amphoe = "F"; District = "F" }
 ]
+
+let bind xm f =
+    match xm with
+    | (_, values) -> f values
+
+type A() =
+    member __.Bind(m, f) = bind m f
+    member __.Return d = [d]
+
+let a = A()
+
+a {
+    let! values = data.GroupBy(fun x -> x.Province)
+    return values
+}
