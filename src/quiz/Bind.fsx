@@ -6,10 +6,6 @@ type C = {
     District: string
 }
 
-type Un() =
-    member __.Bind(m, f) =
-        ()
-
 let data = [
     { Province = "A";  Amphoe = "A"; District = "A" }
     { Province = "A";  Amphoe = "B"; District = "B" }
@@ -19,17 +15,18 @@ let data = [
     { Province = "C";  Amphoe = "F"; District = "F" }
 ]
 
-let bind xm f =
-    match xm with
-    | (_, values) -> f values
+type ListWorkflowBuilder() =
+    member __.Bind(list, f) =
+        list |> List.collect f
 
-type A() =
-    member __.Bind(m, f) = bind m f
-    member __.Return d = [d]
+    member __.Return(x) =
+        [x]
 
-let a = A()
+let l = new ListWorkflowBuilder()
 
-a {
-    let! values = data.GroupBy(fun x -> x.Province)
-    return values
+l {
+    let! a = data.GroupBy(fun x -> x.Province)
+    let! b = a.GroupBy(fun x -> x.Amphoe)
+    let! c = b.Select(fun x -> x.District)
+    return (a, (b, c))
 }
