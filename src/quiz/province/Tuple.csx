@@ -20,8 +20,10 @@ var rs = data.GroupBy(x => x.Province).Select(x =>
     (x.Key, x.GroupBy(k => k.Amphoe).Select(a =>
         (a.Key, a.Select(y => y.District)))
     )
-).ToDictionary(x => x.Key, x => x.Item2.ToDictionary(k => k.Key, k => k.Item2));
+);
 
-var json = JsonConvert.SerializeObject(rs);
+var dict = rs.ToDictionary(x => x.Key, x => x.Item2.ToDictionary(k => k.Key, k => k.Item2));
+
+var json = JsonConvert.SerializeObject(dict);
 Console.WriteLine(json);
 
