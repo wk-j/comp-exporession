@@ -3,6 +3,7 @@ type ListWorkflowBuilder() =
         list |> List.collect f
 
     member __.Return(x) =
+        printfn "return %A" x
         [x]
 
 let l = new ListWorkflowBuilder()
