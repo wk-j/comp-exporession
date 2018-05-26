@@ -1,6 +1,5 @@
 #! "netcoreapp2.1"
 #r "nuget: Newtonsoft.Json,11.0.2"
-// [ {:province :a, :district :b, :amphoe :c}, {:province: a, :district: k, :amphoe: g} ]
 
 using Newtonsoft.Json;
 
@@ -13,7 +12,8 @@ class P {
 var data = new dynamic[] {
     new { Province = "A", Amphoe = "C", District = "B"},
     new { Province = "A", Amphoe = "C", District = "C"},
-    new { Province = "A", Amphoe = "G", District = "K"}
+    new { Province = "A", Amphoe = "G", District = "K"},
+    new { Province = "B", Amphoe = "G", District = "K"}
 };
 
 var rs = data.GroupBy(x => x.Province).Select(x =>
